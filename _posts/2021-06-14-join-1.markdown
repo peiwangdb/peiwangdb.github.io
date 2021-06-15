@@ -6,7 +6,7 @@ date:   2021-06-14 15:01:00
 
 _Observing true experts in different fields, you find a common practice that they all share -- mastering the basics._
 
-                                                            -- Itzik Ben-Gan, Inside SQL Server 2008: T-SQL Querying
+-- Itzik Ben-Gan, Inside SQL Server 2008: T-SQL Querying
 
 ---
 
@@ -19,7 +19,7 @@ In this article, I will cover the join syntax, types, related concepts and pitfa
 The goal is to provide a comprehensive guide that helps the audience understand SQL join in a systematic and intuitive way. 
 I will use the below two example tables borrowed from Wikipedia[[1](https://en.wikipedia.org/wiki/Join_(SQL))] through the text.
 
-<table border="0">
+<!-- <table border="0">
  <tr >
   <center>
   <td><b style="font-size:30px">Employee table</b></td>
@@ -85,7 +85,7 @@ I will use the below two example tables borrowed from Wikipedia[[1](https://en.w
     </table>
   </td>
  </tr>
-</table>
+</table> -->
 
 
 <!-- introduce sql syntax and standard join types-->
@@ -101,12 +101,13 @@ The _ANSI 89_ syntax (old style / implicit join notation) uses a cross join or c
 While the _ANSI 92_ (new style/ explicit join notation) syntax uses a set of explicit key words like ```INNER JOIN```, ```LEFT JOIN```, et cetera to specify the join type, and puts the join conditions in an ON clause, where ON clause is used to specify the joining conditions over attributes.
 
 
-|      Join Type    |      ANSI 92 / New Style / Explicit     |        ANSI 89 / Old Style / Implicit    | 
+<!-- |      Join Type    |      ANSI 92 / New Style / Explicit     |        ANSI 89 / Old Style / Implicit    | 
 | :---------------: | :-------------------------------------- | :--------------------------------------- |
 |   [INNER] JOIN    |```SELECT *```<br>```FROM employee JOIN department```<br>```ON employee.DepartmentID = department.DepartmentID;```|```SELECT *```<br>```FROM employee, department```<br>```WHERE employee.DepartmentID = department.DepartmentID;```|
 |  CROSS JOIN  | ```SELECT *```<br>```FROM employee```<br>```CROSS JOIN department;```| ```SELECT * ```<br>```FROM employee, department;```|
 | LEFT [OUTER] JOIN |```SELECT *```<br>```FROM employee```<br>```LEFT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;```|```SELECT *```<br>```FROM employee, department```<br>```WHERE employee.DepartmentID *= department.DepartmentID;```|
-
+ -->
+ 
 A natural question to ask is: which style should you use? 
 Although in practice many people find the implicit join is intuitive widely used, the explicit notation is known as the best practice [2](https://stackoverflow.com/questions/11251751/which-join-syntax-is-better). 
 The implicit way is not only harder to debug but also limitedly supported for OUTER JOINs.
@@ -128,34 +129,36 @@ For INNER JOIN, when the table contains NULL values, it is recommanded to enforc
 or consider an OUTER JOIN.
 
 <table>
-  	 <tr >
-      <td><b style="font-size:10px">Employee.LastName</b></td>
-      <td><b style="font-size:10px">Employee.DepartmentID</b></td>
-      <td><b style="font-size:10px">Department.DepartmentName</b></td>
-     </tr>
-  	 <tr >
-      <td>Rafferty</td>
-      <td>31</td>
-      <td>Sales</td>
-     </tr>
-     <tr >
-      <td>Jones</td>
-      <td>33</td>
-      <td>Engineering</td>
-     </tr>
-     <tr >
-      <td>Heisenberg</td>
-      <td>33</td>
-      <td>Engineering</td>
-     </tr>
-     <tr >
-      <td>Robinson</td>
-      <td>34</td>
-      <td>Clerical</td>
-     </tr>
-     <tr >
-      <td>Smith</td>
-      <td>34</td>
-      <td>Clerical </td>
-     </tr>
-  	</table>
+	<tr >
+     	<td><b style="font-size:10px">Employee.LastName</b></td>
+      	<td><b style="font-size:10px">Employee.DepartmentID</b></td>
+      	<td><b style="font-size:10px">Department.DepartmentName</b></td>
+    </tr>
+  	<tr >
+    	<td>Rafferty</td>
+      	<td>31</td>
+      	<td>Sales</td>
+    </tr>
+    <tr >
+      	<td>Jones</td>
+      	<td>33</td>
+      	<td>Engineering</td>
+    </tr>
+    <tr >
+      	<td>Heisenberg</td>
+      	<td>33</td>
+      	<td>Engineering</td>
+    </tr>
+    <tr >
+      	<td>Robinson</td>
+      	<td>34</td>
+      	<td>Clerical</td>
+    </tr>
+    <tr >
+      	<td>Smith</td>
+    	<td>34</td>
+      	<td>Clerical </td>
+    </tr>
+</table>
+
+
