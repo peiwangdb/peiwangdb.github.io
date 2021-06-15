@@ -7,7 +7,7 @@ title: Pei Wang
 
 Welcome! I'm Pei.
 
-I like artisan bread, thai green curry and cawliflower.
+I like artisan bread, thai green curry and cauliflower.
 
 This is a place where I plan to keep some of my learnings and thoughts.
 The [picture](https://www.roningallery.com/zojo-temple-in-snow-at-shiba) apparently is not me or by me.
