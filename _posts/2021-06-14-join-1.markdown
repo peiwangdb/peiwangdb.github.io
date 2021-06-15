@@ -4,9 +4,9 @@ title:  "Basics you need to know about SQL Joins"
 date:   2021-06-14 15:01:00
 ---
 
-_Observing true experts in different fields, you find a common practice that they all share -- mastering the basics._
+### _Observing true experts in different fields, you find a common practice that they all share -- mastering the basics._
 
--- Itzik Ben-Gan, Inside SQL Server 2008: T-SQL Querying
+#### -- _Itzik Ben-Gan, Inside SQL Server 2008: T-SQL Querying_
 
 ---
 
@@ -15,6 +15,7 @@ _Observing true experts in different fields, you find a common practice that the
 As a critical component in SQL, the join operation is to combine two or more tables into a new table. 
 On one hand, understanding the different types of joins and how they are handled at system level is central to mastering data processing.
 On the other hand, joining tables can be a complex and confusing procedure for novice, due to the many kinds of join types and implementation options depending system conditions.
+
 In this article, I will cover the join syntax, types, related concepts and pitfalls, go through the essential join implementation algorithms, and present the join order optimization problem and techniques, which are inevitable to a database system.
 The goal is to provide a comprehensive guide that helps the audience understand SQL join in a systematic and intuitive way. 
 I will use the below two example tables borrowed from Wikipedia[[1](https://en.wikipedia.org/wiki/Join_(SQL))] through the text.
@@ -100,14 +101,13 @@ The table below shows the difference.
 The _ANSI 89_ syntax (old style / implicit join notation) uses a cross join or comma-delimited list of tables in FROM clause, and places the join conditions in the WHERE clause.
 While the _ANSI 92_ (new style/ explicit join notation) syntax uses a set of explicit key words like ```INNER JOIN```, ```LEFT JOIN```, et cetera to specify the join type, and puts the join conditions in an ON clause, where ON clause is used to specify the joining conditions over attributes.
 
-
-<!-- |      Join Type    |      ANSI 92 / New Style / Explicit     |        ANSI 89 / Old Style / Implicit    | 
+|-------------------+-----------------------------------------+------------------------------------------+
+|      Join Type    |      ANSI 92 / New Style / Explicit     |        ANSI 89 / Old Style / Implicit    | 
 | :---------------: | :-------------------------------------- | :--------------------------------------- |
 |   [INNER] JOIN    |```SELECT *```<br>```FROM employee JOIN department```<br>```ON employee.DepartmentID = department.DepartmentID;```|```SELECT *```<br>```FROM employee, department```<br>```WHERE employee.DepartmentID = department.DepartmentID;```|
 |  CROSS JOIN  | ```SELECT *```<br>```FROM employee```<br>```CROSS JOIN department;```| ```SELECT * ```<br>```FROM employee, department;```|
 | LEFT [OUTER] JOIN |```SELECT *```<br>```FROM employee```<br>```LEFT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;```|```SELECT *```<br>```FROM employee, department```<br>```WHERE employee.DepartmentID *= department.DepartmentID;```|
- -->
- 
+
 A natural question to ask is: which style should you use? 
 Although in practice many people find the implicit join is intuitive widely used, the explicit notation is known as the best practice [2](https://stackoverflow.com/questions/11251751/which-join-syntax-is-better). 
 The implicit way is not only harder to debug but also limitedly supported for OUTER JOINs.
@@ -128,7 +128,7 @@ We should pay special attention to NULL values when joining, because NULL values
 For INNER JOIN, when the table contains NULL values, it is recommanded to enforce the integrity first,
 or consider an OUTER JOIN.
 
-<table>
+<!-- <table>
 	<tr >
      	<td><b style="font-size:10px">Employee.LastName</b></td>
       	<td><b style="font-size:10px">Employee.DepartmentID</b></td>
@@ -159,6 +159,6 @@ or consider an OUTER JOIN.
     	<td>34</td>
       	<td>Clerical </td>
     </tr>
-</table>
+</table> -->
 
 
