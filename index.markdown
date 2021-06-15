@@ -7,14 +7,14 @@ title: Pei Wang
 
 Welcome! I'm Pei.
 
-I enjoy programming, jogging, thinking, reading, cooking, music, languages and podcasts.
+I like artisan bread, thai green curry and cawliflower.
 
 This is a place where I plan to keep some of my learnings and thoughts.
-The [picture](https://www.roningallery.com/zojo-temple-in-snow-at-shiba) apparently is not me.
+The [picture](https://www.roningallery.com/zojo-temple-in-snow-at-shiba) apparently is not me or by me.
 Here, it is like a picture that you use to decorate the living room.
-I found it fit this website and my mentality well.
+I like it and I found it fit this website well. 
 
-If you have comments or suggestions, welcome to raise an issue or pull request [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
+If you have comments or suggestions regarding the content, welcome to raise an issue or pull request [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
 
 
 
