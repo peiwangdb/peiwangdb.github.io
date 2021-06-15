@@ -3,13 +3,20 @@ layout: default
 title: Pei Wang
 ---
 
-This is where you would but a short bio, and/or a description of your site. It also serves as an example of how to set up a standalone page. For example:
+<img src="/images/hasui-2.jpeg" class="right" width="40%" height="40%" />
 
-<img src="/images/hasui.jpeg" class="right" width="40%" height="40%" />
+Welcome! I'm Pei.
 
-**William Shakespeare** (26 April 1564 – 23 April 1616) was an English poet and playwright, widely regarded as the greatest writer in the English language and the world's pre-eminent dramatist. He is often called England's national poet and the "Bard of Avon". His extant works, including some collaborations, consist of about 38 plays, 154 sonnets, two long narrative poems, and a few other verses, the authorship of some of which is uncertain. His plays have been translated into every major living language and are performed more often than those of any other playwright.
+I enjoy programming, jogging, thinking, reading, cooking, music, languages and podcasts.
 
-Shakespeare was born and brought up in Stratford-upon-Avon. At the age of 18, he married Anne Hathaway—no, not *that* Anne Hathaway—with whom he had three children.
+This is a place where I plan to keep some of my learnings and thoughts.
+The [picture](https://www.roningallery.com/zojo-temple-in-snow-at-shiba) apparently is not me.
+Here, it is like a picture that you use to decorate the living room.
+I found it fit this website and my mentality well.
+
+If you have comments or suggestions, welcome to raise an issue or pull request [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
+
+
 
 <!-- {% for post in paginator.posts %}
 
