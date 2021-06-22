@@ -1,14 +1,16 @@
 ---
 layout: post
-title:  "Basics you need to know about SQL Joins"
-date:   2021-06-14 15:01:00
+title:  "Basics You Need to Know about SQL Joins"
+date:   2021-06-23 15:03:00
 ---
 
-### _Observing true experts in different fields, you find a common practice that they all share -- mastering the basics._
+_Observing true experts in different fields, you find a common practice that they all share -- mastering the basics._
 
-#### -- _Itzik Ben-Gan, Inside SQL Server 2008: T-SQL Querying_
+-- _Itzik Ben-Gan, Inside SQL Server 2008: T-SQL Querying_
+
 
 ---
+## Introduction
 
 <!-- important -> difficult and complex -> goal and overview of the article -->
 
@@ -20,75 +22,11 @@ In this article, I will cover the join syntax, types, related concepts and pitfa
 The goal is to provide a comprehensive guide that helps the audience understand SQL join in a systematic and intuitive way. 
 I will use the below two example tables borrowed from Wikipedia[[1](https://en.wikipedia.org/wiki/Join_(SQL))] through the text.
 
-<!-- <table border="0">
- <tr >
-  <center>
-  <td><b style="font-size:30px">Employee table</b></td>
-  <td><b style="font-size:30px">Department table</b></td>
- </tr>
- <tr>
-  <td>
-  	<table border="0">
-  	<center>
- 	 <tr >
-      <td><b style="font-size:25px">LastName</b></td>
-      <td><b style="font-size:25px">DepartmentID</b></td>
-     </tr>
-     <tr >
-      <td>Rafferty</td>
-      <td>31</td>
-     </tr>
-     <tr >
-      <td>Jones</td>
-      <td>33</td>
-     </tr>
-     <tr >
-      <td>Heisenberg</td>
-      <td>33</td>
-     </tr>
-     <tr >
-      <td>Robinson</td>
-      <td>34</td>
-     </tr>
-     <tr >
-      <td>Smith</td>
-      <td>34</td>
-     </tr>
-     <tr >
-      <td>Williams</td>
-      <td>NULL</td>
-     </tr>
-    </table>
-  </td>
-  <td>
-  	<table border="0">
-  	<center>
- 	 <tr >
-      <td><b style="font-size:25px">DepartmentID</b></td>
-      <td><b style="font-size:25px">DepartmentName</b></td>
-     </tr>
-     <tr >
-      <td>31</td>
-      <td>Sales</td>
-     </tr>
-     <tr >
-      <td>33</td>
-      <td>Engineering</td>
-     </tr>
-     <tr >
-      <td>34</td>
-      <td>Clerical</td>
-     </tr>
-     <tr >
-      <td>35</td>
-      <td>Marketing</td>
-     </tr>
-    </table>
-  </td>
- </tr>
-</table> -->
+<img src="/images/join/join-1.jpg" class="left" width="100%" height="100%" />
 
 
+---
+## Two Styles of Join Syntax
 <!-- introduce sql syntax and standard join types-->
 
 The starting point of the join operations in database systems is the join clauses in SQL (Structured Query Language), 
@@ -101,12 +39,7 @@ The table below shows the difference.
 The _ANSI 89_ syntax (old style / implicit join notation) uses a cross join or comma-delimited list of tables in FROM clause, and places the join conditions in the WHERE clause.
 While the _ANSI 92_ (new style/ explicit join notation) syntax uses a set of explicit key words like ```INNER JOIN```, ```LEFT JOIN```, et cetera to specify the join type, and puts the join conditions in an ON clause, where ON clause is used to specify the joining conditions over attributes.
 
-|-------------------+-----------------------------------------+------------------------------------------+
-|      Join Type    |      ANSI 92 / New Style / Explicit     |        ANSI 89 / Old Style / Implicit    | 
-| :---------------: | :-------------------------------------- | :--------------------------------------- |
-|   [INNER] JOIN    |```SELECT *```<br>```FROM employee JOIN department```<br>```ON employee.DepartmentID = department.DepartmentID;```|```SELECT *```<br>```FROM employee, department```<br>```WHERE employee.DepartmentID = department.DepartmentID;```|
-|  CROSS JOIN  | ```SELECT *```<br>```FROM employee```<br>```CROSS JOIN department;```| ```SELECT * ```<br>```FROM employee, department;```|
-| LEFT [OUTER] JOIN |```SELECT *```<br>```FROM employee```<br>```LEFT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;```|```SELECT *```<br>```FROM employee, department```<br>```WHERE employee.DepartmentID *= department.DepartmentID;```|
+<img src="/images/join/join-2.png" class="left" width="100%" height="100%" />
 
 A natural question to ask is: which style should you use? 
 Although in practice many people find the implicit join is intuitive widely used, the explicit notation is known as the best practice [2](https://stackoverflow.com/questions/11251751/which-join-syntax-is-better). 
@@ -115,6 +48,8 @@ It will also help eliminate the unintended cross product (inner join operations 
 
 
 --- 
+## Standard Join Types
+
 <!-- join operations definitions, results and applications-->
 
 We are ready to understand the results produced by different join types.
@@ -128,37 +63,228 @@ We should pay special attention to NULL values when joining, because NULL values
 For INNER JOIN, when the table contains NULL values, it is recommanded to enforce the integrity first,
 or consider an OUTER JOIN.
 
-<!-- <table>
-	<tr >
-     	<td><b style="font-size:10px">Employee.LastName</b></td>
-      	<td><b style="font-size:10px">Employee.DepartmentID</b></td>
-      	<td><b style="font-size:10px">Department.DepartmentName</b></td>
-    </tr>
-  	<tr >
-    	<td>Rafferty</td>
-      	<td>31</td>
-      	<td>Sales</td>
-    </tr>
-    <tr >
-      	<td>Jones</td>
-      	<td>33</td>
-      	<td>Engineering</td>
-    </tr>
-    <tr >
-      	<td>Heisenberg</td>
-      	<td>33</td>
-      	<td>Engineering</td>
-    </tr>
-    <tr >
-      	<td>Robinson</td>
-      	<td>34</td>
-      	<td>Clerical</td>
-    </tr>
-    <tr >
-      	<td>Smith</td>
-    	<td>34</td>
-      	<td>Clerical </td>
-    </tr>
-</table> -->
+<img src="/images/join/join-3.svg" class="left" width="100%" height="100%" />
+
+
+**2. CROSS JOIN**
+
+```CROSS JOIN``` returns the Cartesian product of rows from tables in the join as shown below. 
+In other words, it will produce rows which combine each row from the first table with each row from the second table. 
+It worth noting that the results of the ```INNER JOIN``` is a subset of ```CROSS JOIN```, with selection condition applied.
+When the condition is always true, for example, ```SELECT * FROM employee INNER JOIN department ON 1=1;```, ```INNER JOIN``` and ```CROSS JOIN``` will produce the same results.
+ 
+<img src="/images/join/join-4.jpg" class="left" width="100%" height="100%" />
+
+
+**3. OUTER JOINs**
+
+The major difference between an ```OUTER JOIN``` and a ```INNER JOIN``` is that the result of the ```OUTER JOIN``` retains each row, even if no other matching row exists.
+An example use case would be to produce a report that shows ALL customers and their purchases[[2](https://stackoverflow.com/questions/1101343/what-is-the-purpose-or-use-case-for-an-outer-join-in-sql)].
+That is, show even customers who have not purchased anything. 
+If you do an ordinary join (```INNER JOIN```) of customers and purchases, the report would show only those customers with at least one purchase.
+
+
+The result of a **LEFT OUTER JOIN** (or simply left join) for tables A and B always contains all rows of the "left" table (employee table here), even if the join condition does not find any matching row in the "right" table (department table here).
+The result of executing
+{% highlight ruby %}
+SELECT *
+FROM employee
+LEFT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
+{% endhighlight %}
+is shown as the following.
+
+<img src="/images/join/join-5.jpg" class="left" width="100%" height="100%" />
+
+
+
+
+Similarly, the result of a **RIGHT OUTER JOIN** always contains all the all rows of the "right" table.
+The result of executing ```SELECT *```<br>```FROM employee```<br>```RIGHT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;``` is shown as the following.
+
+<img src="/images/join/join-6.jpg" class="left" width="100%" height="100%" />
+  
+
+
+A **FULL OUTER JOIN** combines the effect of applying both left and right outer joins. 
+It contains all the matched rows.
+For the rows that can not be matched, NULL value will be filled for every column of the table that lacks a matching row.
+The result of executing ```SELECT *```<br>```FROM employee```<br>```FULL OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;``` is shown as the following.
+
+<img src="/images/join/join-7.jpg" class="left" width="100%" height="100%" />
+
+
+
+
+---
+
+## Other Join Concepts
+
+Expect for the above 
+
+**EQUI-JOIN**  **NON-EQUI JOIN**  **Theta JOIN** 
+
+
+
+##### NATURAL JOIN (limited support)
+
+```NATURAL JOIN``` (more details below) is included in _ANSI 92_ but not supported by some databases. 
+The table below shows the join queries in two different styles.
+
+A NATURAL JOIN implements an equijoin, which returns rows combined from both tables when the values in the join condition match. While the join conditions can include one or more columns, you have no choice in selecting the join columns. A NATURAL JOIN checks the definition of both tables (in the data catalog or metadata) and looks for like named columns. It then joins the table based on the values of all like named columns from both tables.
+
+A NATURAL JOIN can be an INNER join, a LEFT OUTER join, or a RIGHT OUTER join. The default is INNER join.
+
+PostgreSQL, MySQL and Oracle support natural joins; Microsoft T-SQL and IBM DB2 do not. The columns used in the join are implicit so the join code does not show which columns are expected, and a change in column names may change the results. In the SQL:2011 standard, natural joins are part of the optional F401, "Extended joined table", package.
+
+In many database environments the column names are controlled by an outside vendor, not the query developer. A natural join assumes stability and consistency in column names which can change during vendor mandated version upgrades.
+
+NATURAL JOIN and USING Clause are mutually exclusive.
+It should not have a qualifier(table name or Alias) in the referenced columns.
+NATURAL JOIN uses all the columns with matching names and datatypes to join the tables. The USING Clause can be used to specify only those columns that should be used for an EQUIJOIN.
+
+
+USING Clause is used to match only one column when more than one column matches.
+The USING construct is more than mere syntactic sugar, however, since the result set differs from the result set of the version with the explicit predicate. Specifically, any columns mentioned in the USING list will appear only once, with an unqualified name, rather than once for each table in the join. In the case above, there will be a single DepartmentID column and no employee.DepartmentID or department.DepartmentID.
+
+
+##### SEMI JOIN
+
+##### ANTI [SEMI] JOIN
+
+An Antijoin implements an outer join minus an equijoin, which returns a relative complement when the first query is a LEFT JOIN or RIGHT JOIN and a symmetric difference when the first query is a FULL JOIN.
+
+##### SELF JOIN
+
+##### UNION JOIN
+
+##### Division
+
+
+
+
+## Implications and FAQs
+
+##### NATURAL JOIN VS. EQUI JOIN?
+
+##### NATURAL JOIN VS. INNER JOIN
+
+##### The danger of NATURAL JOIN
+
+##### EQUI JOIN, NON-EQUI JOIN VS. INNER JOINs?
+
+##### CROSS JOIN VS. INNER JOIN
+
+##### CROSS JOIN VS. FULL OUTER JOIN 
+
+##### SEMI JOIN VS. OUTER JOIN
+
+##### pitfalls of NULL values
+
+##### CROSS APPLY VS. OUTER JOIN
+
+
+
+
+
+
+---
+
+## Join Algorithms
+
+##### Nested Loop Join
+
+##### Hash Join
+
+##### Sort-Merge Join
+
+
+---
+
+## Join Index Creation
+
+
+
+---
+
+## Joins Order Optimization
+
+when joining multiple tables, due to the fact that joining can only be performed on two tables at once, different join orders lead to different execution time. Therefore join reordering is a critical component in query optimization.
+
+##### Left Deep
+
+##### Bushy
+
+##### Sample
+
+##### Learning-based
+
+
+---
+
+## Advanced Topics and Resources
+
+1. Joins for Online Aggregation
+	http://www.cs.cmu.edu/~natassa/courses/15-823/F02/papers/decision-ripple-sigmod99.pdf
+	http://www.cs.utah.edu/~zyzhao/files/papers/wanderjoin.pdf
+2. Join Order Selection using Reinforcement Learning
+3. Join-size Estimation 
+Y. E. Ioannidis, S. Christodoulakis. On the Propagation of Errors in the Size of Join Results.  SIGMOD 1991. (Must-read)
+Swarup Acharya, Phillip B. Gibbons, Viswanath Poosala, Sridhar Ramaswamy: Join Synopses for Approximate Query Answering. SIGMOD 99.
+Noga Alon, Phillip B. Gibbons, Yossi Matias, and Mario Szegedy: Tracking join and self-join sizes in limited storage. PODS 1999.
+Wei Sun, Yibei Ling, Naphtali Rishe and Yi Deng: An instant and accurate size estimation method for joins and selection in a retrieval-intensive environment. Sigmod 1993.
+Allen Van Gelder: Multiple join size estimation by virtual domains. PODS 1993.
+Arun Swami and K. Bernhard Schiefer: On the estimation of join result sizes.
+Stavros Christodoulakis: Estimating block transfers and join sizes. 1983.
+4. Memory Adaptive Sorting and Hashing
+Masaya Nakayama, Masaru Kitsuregawa, and Mikio Takagi. Hash-partitioned join method using dynamic destaging strategy. VLDB 88'.
+Hansj¨ org Zeller and Jim Gray. An adaptive hash join algorithm for multiuser environments. VLDB 90'. 
+HweeHwa Pang, Michael J. Carey, and Miron Livny. Partially preemptive hash joins. SIGMOD 93'.
+5. approximate string joins
+
+
+
+Thanks Meng Xu for reading the draft and providing feedback.
+If you have comments or questions, file an issue or PR [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
+
+
+
+References:
+[1]. https://en.wikipedia.org/wiki/SQL
+[1]. https://blog.mclaughlinsoftware.com/oracle-sql-programming/basic-sql-join-semantics/
+[2]. https://stackoverflow.com/questions/1599050/will-ansi-join-vs-non-ansi-join-queries-perform-differently
+[3]. Syntax comparison examples https://stackoverflow.com/questions/18891148/oracle-joins-comparison-between-conventional-syntax-vs-ansi-syntax
+[4]. Equi-join VS. Inner-join https://stackoverflow.com/questions/5471063/is-inner-join-the-same-as-equi-join
+[5]. SQL implementations http://troels.arvin.dk/db/rdbms/
+[6]. ANSI JOIN standard https://www.oratechinfo.co.uk/ansi_joins.html
+[7]. Natural join example https://blog.mclaughlinsoftware.com/2008/05/24/unnatural-outcome-of-natural-joins/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
