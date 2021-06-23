@@ -14,7 +14,7 @@ _Observing true experts in different fields, you find a common practice that the
 
 <!-- important -> difficult and complex -> goal and overview of the article -->
 
-As a critical component in SQL, the join operation is to combine two or more tables into a new table. 
+As a critical component in SQL (Structured Query Language), the join operation is to combine two or more tables into a new table. 
 On one hand, understanding the different types of joins and how they are handled at system level is central to mastering data processing.
 On the other hand, joining tables can be a complex and confusing procedure for novice, due to the many kinds of join types and implementation options depending system conditions.
 
@@ -29,7 +29,7 @@ I will use the below two example tables borrowed from Wikipedia[[1](https://en.w
 ## Two Styles of Join Syntax
 <!-- introduce sql syntax and standard join types-->
 
-The starting point of the join operations in database systems is the join clauses in SQL (Structured Query Language), 
+The starting point of the join operations in database systems is the join clauses in SQL, 
 a domain language to query databases. 
 SQL became a standard of the American National Standards Institute (ANSI) in 1986, and the standard has evolved over the decades. 
 Although various database systems have their SQL dialect, they all support five types of joins: ```INNER```, ```LEFT OUTER```, ```RIGHT OUTER```, ```FULL OUTER``` and ```CROSS```, specified in the ANSI standard.
@@ -37,18 +37,20 @@ Although various database systems have their SQL dialect, they all support five 
 In terms of the join statement, two specific ANSI standard syntax versions are important to include. 
 The table below shows the difference.
 The _ANSI 89_ syntax (old style / implicit join notation) uses a cross join or comma-delimited list of tables in FROM clause, and places the join conditions in the WHERE clause.
+Note that no implicit join-notation for outer joins exists in standard SQL.
+The ```OUTER JOIN``` example shown in the table is the syntax adopted in Sybase[[3]()].
 While the _ANSI 92_ (new style/ explicit join notation) syntax uses a set of explicit key words like ```INNER JOIN```, ```LEFT JOIN```, et cetera to specify the join type, and puts the join conditions in an ON clause, where ON clause is used to specify the joining conditions over attributes.
 
 <img src="/images/join/join-2.png" class="left" width="100%" height="100%" />
 
 A natural question to ask is: which style should you use? 
-Although in practice many people find the implicit join is intuitive widely used, the explicit notation is known as the best practice [2](https://stackoverflow.com/questions/11251751/which-join-syntax-is-better). 
+Although in practice many people find the implicit join is intuitive widely used, the explicit notation is known as the best practice [[2](https://stackoverflow.com/questions/11251751/which-join-syntax-is-better)]. 
 The implicit way is not only harder to debug but also limitedly supported for OUTER JOINs.
 It will also help eliminate the unintended cross product (inner join operations missing the join condition). 
 
 
 --- 
-## Standard Join Types
+## Standard SQL Join Types
 
 <!-- join operations definitions, results and applications-->
 
@@ -84,7 +86,7 @@ That is, show even customers who have not purchased anything.
 If you do an ordinary join (```INNER JOIN```) of customers and purchases, the report would show only those customers with at least one purchase.
 
 
-The result of a **LEFT OUTER JOIN** (or simply left join) for tables A and B always contains all rows of the "left" table (employee table here), even if the join condition does not find any matching row in the "right" table (department table here).
+The result of a ```LEFT OUTER JOIN``` (or simply ```LEFT JOIN```) for tables A and B always contains all rows of the "left" table (employee table here), even if the join condition does not find any matching row in the "right" table (department table here).
 The result of executing
 {% highlight ruby %}
 SELECT *
@@ -96,13 +98,10 @@ is shown as the following.
 <img src="/images/join/join-5.jpg" class="left" width="100%" height="100%" />
 
 
-
-
 Similarly, the result of a **RIGHT OUTER JOIN** always contains all the all rows of the "right" table.
 The result of executing ```SELECT *```<br>```FROM employee```<br>```RIGHT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;``` is shown as the following.
 
 <img src="/images/join/join-6.jpg" class="left" width="100%" height="100%" />
-  
 
 
 A **FULL OUTER JOIN** combines the effect of applying both left and right outer joins. 
@@ -111,8 +110,6 @@ For the rows that can not be matched, NULL value will be filled for every column
 The result of executing ```SELECT *```<br>```FROM employee```<br>```FULL OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;``` is shown as the following.
 
 <img src="/images/join/join-7.jpg" class="left" width="100%" height="100%" />
-
-
 
 
 ---
