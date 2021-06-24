@@ -61,9 +61,17 @@ We are ready to understand the results produced by different join types.
 ```INNER JOIN``` is probably the most commonly used. 
 It matches two tables based on column values.
 The table below shows the result from the previous INNER JOIN query.
-We should pay special attention to NULL values when joining, because NULL values will never match any other value (not even NULL itself).
+We should pay special attention to NULL values when joining, because **NULL values will never match any other value (not even NULL itself)**.
 For INNER JOIN, when the table contains NULL values, it is recommanded to enforce the integrity first,
 or consider an OUTER JOIN.
+Executing 
+{% highlight ruby %}
+SELECT  Employee.LastName, Employee.DepartmentID, Department.DepartmentName
+FROM employee
+INNER JOIN department ON employee.DepartmentID = department.DepartmentID;
+{% endhighlight %}
+the result is shown below.
+
 
 <img src="/images/join/join-3.svg" class="left" width="100%" height="100%" />
 
@@ -129,40 +137,64 @@ FULL OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
 
 ## Other Join Concepts
 
-Except for the above standard join operations, there are many related terms that you will see in many scenarios.
-That is part of the reason that makes joins confusing.
+Except for the above standard join types, there are some related join terms that you will see in many scenarios.
+That is part of the reason that makes understanding joins confusing.
 
-**```NATURAL JOIN```** is a join type included in _ANSI 92_ but not supported by some databases.
-A NATURAL JOIN implements an equijoin, which returns rows combined from both tables when the values in the join condition match. While the join conditions can include one or more columns, you have no choice in selecting the join columns. A NATURAL JOIN checks the definition of both tables (in the data catalog or metadata) and looks for like named columns. It then joins the table based on the values of all like named columns from both tables.
+**```NATURAL JOIN```** is a join type similar to above standard operations included in _ANSI 92_, but not supported by all the databases. PostgreSQL, MySQL and Oracle support natural joins; Microsoft T-SQL and IBM DB2 do not.
+A ```NATURAL JOIN``` example is:
+{% highlight ruby %}
+SELECT *
+FROM employee NATURAL JOIN department;
+{% endhighlight %}
 
-A NATURAL JOIN can be an INNER join, a LEFT OUTER join, or a RIGHT OUTER join. The default is INNER join.
+It is equivalent with 
+{% highlight ruby %}
+SELECT *
+FROM employee INNER JOIN department USING (DepartmentID);
+{% endhighlight %}
 
-PostgreSQL, MySQL and Oracle support natural joins; Microsoft T-SQL and IBM DB2 do not. The columns used in the join are implicit so the join code does not show which columns are expected, and a change in column names may change the results. In the SQL:2011 standard, natural joins are part of the optional F401, "Extended joined table", package.
+The results is shown below.
 
-In many database environments the column names are controlled by an outside vendor, not the query developer. A natural join assumes stability and consistency in column names which can change during vendor mandated version upgrades.
+<img src="/images/join/join-3.svg" class="left" width="100%" height="100%" />
 
-NATURAL JOIN and USING Clause are mutually exclusive.
+The **USING clause** is used to explicitly specify the matching column.
+Any columns mentioned in the USING list will appear only once,
+NATURAL JOIN and USING Clause are mutually exclusive and supported together[[](https://troels.arvin.dk/db/rdbms/)].
+
+```NATURAL JOIN``` creates an implicit join clause based on the common columns (defined as having the same name) in the two tables being joined. 
+A NATURAL JOIN can be an INNER join, a LEFT OUTER join, or a RIGHT OUTER join, for example, you can write ```SELECT *
+FROM employee NATURAL LEFT JOIN department;```.
+The default is INNER join.
+
+The NATURAL JOIN checks the definition of both tables (in the data catalog or metadata) and looks for like named columns. 
 It should not have a qualifier(table name or Alias) in the referenced columns.
-NATURAL JOIN uses all the columns with matching names and datatypes to join the tables. The USING Clause can be used to specify only those columns that should be used for an EQUIJOIN.
+While the join conditions can include one or more columns, you have no choice in selecting the join columns.
+The major concern of the natural join is that it assumes stability and consistency in column names which can change during vendor mandated version upgrades, while in many database environments the column names are controlled by an outside vendor, not the query developer. The core danger it omitting the column validation step. 
+The columns used in the join are implicit so the join code does not show which columns are expected, and a change in column names may change the results.
+When the database is changed without notifying the query developer, the results might not be what the query developer is expecting for.
+This [blog](https://blog.mclaughlinsoftware.com/2008/05/24/unnatural-outcome-of-natural-joins/) shows a concerete example.
 
 
-**The danger of NATURAL JOIN**
+**EQUI-JOIN**, **NON-EQUI JOIN** and **Theta JOIN** are a group of comparator-based join.
+They are just the name for the joins with or without the equal condition.
+EQUI-JOIN refers to the joins that uses only equality comparisons in the join-predicate, i.e. using other comparison operators (such as <) disqualifies a join as an equi-join. The examples we saw so far are all EQUI-JOINs.
+All the NATURAL JOINs are EQUI-JOINs.
+Similarly, NON-EQUI JOIN refers to the joins that use comparison operators like <, >, <=, >=, !=, and <> and the BETWEEN operator (but not =).
+For example, you can write ``` SELECT * FROM employee JOIN department ON employee.DepartmentID != department.DepartmentID;
+```.
+A theta join allows for arbitrary comparison relationships. 
+An equijoin is a theta join using the equality operator.
+Both NON-EQUI JOIN and EQUI-JOIN are theta joins.
+Natural join is a subset of Equi join, which is a subset of Theta join.
 
-**USING Clause** is used to match only one column when more than one column matches.
-The USING construct is more than mere syntactic sugar, however, since the result set differs from the result set of the version with the explicit predicate. Specifically, any columns mentioned in the USING list will appear only once, with an unqualified name, rather than once for each table in the join. In the case above, there will be a single DepartmentID column and no employee.DepartmentID or department.DepartmentID.
 
+**SEMI JOIN** 
 
-
-**EQUI-JOIN**, **NON-EQUI JOIN** and **Theta JOIN** are a group of concepts.
-
-
-
-
-**SEMI JOIN**
 
 
 **ANTI [SEMI] JOIN**
 An Antijoin implements an outer join minus an equijoin, which returns a relative complement when the first query is a LEFT JOIN or RIGHT JOIN and a symmetric difference when the first query is a FULL JOIN.
+
 
 **SELF JOIN**
 
@@ -174,17 +206,6 @@ In comparion to join operators, **DIVISION** is available in the definition of r
 
 
 **CROSS APPLY**
-
----
-
-## Questions you might want to ask.
-
-1. What is the relationship between standard join types and join types like EQUI-JOIN?
-
-
-2. What is the difference between SEMI JOIN and OUTER JOIN?
-
-
 
 
 
