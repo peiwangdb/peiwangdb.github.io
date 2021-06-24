@@ -73,7 +73,7 @@ or consider an OUTER JOIN.
 ```CROSS JOIN``` returns the Cartesian product of rows from tables in the join as shown below. 
 In other words, it will produce rows which combine each row from the first table with each row from the second table. 
 It worth noting that the results of the ```INNER JOIN``` is a subset of ```CROSS JOIN```, with selection condition applied.
-When the condition is always true, for example, ```SELECT * FROM employee INNER JOIN department ON 1=1;```, ```INNER JOIN``` and ```CROSS JOIN``` will produce the same results.
+When the condition is always true (for example, ```SELECT * FROM employee INNER JOIN department ON 1=1;```), ```INNER JOIN``` and ```CROSS JOIN``` will produce the same results.
  
 <img src="/images/join/join-4.jpg" class="left" width="100%" height="100%" />
 
@@ -99,7 +99,14 @@ is shown as the following.
 
 
 Similarly, the result of a **RIGHT OUTER JOIN** always contains all the all rows of the "right" table.
-The result of executing ```SELECT *```<br>```FROM employee```<br>```RIGHT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;``` is shown as the following.
+The result of executing
+{% highlight ruby %}
+SELECT *
+FROM employee
+RIGHT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
+{% endhighlight %}
+is shown as the following.
+
 
 <img src="/images/join/join-6.jpg" class="left" width="100%" height="100%" />
 
@@ -107,7 +114,13 @@ The result of executing ```SELECT *```<br>```FROM employee```<br>```RIGHT OUTER 
 A **FULL OUTER JOIN** combines the effect of applying both left and right outer joins. 
 It contains all the matched rows.
 For the rows that can not be matched, NULL value will be filled for every column of the table that lacks a matching row.
-The result of executing ```SELECT *```<br>```FROM employee```<br>```FULL OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;``` is shown as the following.
+The result of executing
+
+{% highlight ruby %}
+SELECT *
+FROM employee
+FULL OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
+{% endhighlight %}
 
 <img src="/images/join/join-7.jpg" class="left" width="100%" height="100%" />
 
@@ -116,17 +129,10 @@ The result of executing ```SELECT *```<br>```FROM employee```<br>```FULL OUTER J
 
 ## Other Join Concepts
 
-Expect for the above 
+Except for the above standard join operations, there are many related terms that you will see in many scenarios.
+That is part of the reason that makes joins confusing.
 
-**EQUI-JOIN**  **NON-EQUI JOIN**  **Theta JOIN** 
-
-
-
-##### NATURAL JOIN (limited support)
-
-```NATURAL JOIN``` (more details below) is included in _ANSI 92_ but not supported by some databases. 
-The table below shows the join queries in two different styles.
-
+**```NATURAL JOIN```** is a join type included in _ANSI 92_ but not supported by some databases.
 A NATURAL JOIN implements an equijoin, which returns rows combined from both tables when the values in the join condition match. While the join conditions can include one or more columns, you have no choice in selecting the join columns. A NATURAL JOIN checks the definition of both tables (in the data catalog or metadata) and looks for like named columns. It then joins the table based on the values of all like named columns from both tables.
 
 A NATURAL JOIN can be an INNER join, a LEFT OUTER join, or a RIGHT OUTER join. The default is INNER join.
@@ -140,45 +146,43 @@ It should not have a qualifier(table name or Alias) in the referenced columns.
 NATURAL JOIN uses all the columns with matching names and datatypes to join the tables. The USING Clause can be used to specify only those columns that should be used for an EQUIJOIN.
 
 
-USING Clause is used to match only one column when more than one column matches.
+**The danger of NATURAL JOIN**
+
+**USING Clause** is used to match only one column when more than one column matches.
 The USING construct is more than mere syntactic sugar, however, since the result set differs from the result set of the version with the explicit predicate. Specifically, any columns mentioned in the USING list will appear only once, with an unqualified name, rather than once for each table in the join. In the case above, there will be a single DepartmentID column and no employee.DepartmentID or department.DepartmentID.
 
 
-##### SEMI JOIN
 
-##### ANTI [SEMI] JOIN
+**EQUI-JOIN**, **NON-EQUI JOIN** and **Theta JOIN** are a group of concepts.
 
+
+
+
+**SEMI JOIN**
+
+
+**ANTI [SEMI] JOIN**
 An Antijoin implements an outer join minus an equijoin, which returns a relative complement when the first query is a LEFT JOIN or RIGHT JOIN and a symmetric difference when the first query is a FULL JOIN.
 
-##### SELF JOIN
-
-##### UNION JOIN
-
-##### Division
+**SELF JOIN**
 
 
+**UNION JOIN**
 
 
-## Implications and FAQs
+In comparion to join operators, **DIVISION** is available in the definition of relational algebra.
 
-##### NATURAL JOIN VS. EQUI JOIN?
 
-##### NATURAL JOIN VS. INNER JOIN
+**CROSS APPLY**
 
-##### The danger of NATURAL JOIN
+---
 
-##### EQUI JOIN, NON-EQUI JOIN VS. INNER JOINs?
+## Questions you might want to ask.
 
-##### CROSS JOIN VS. INNER JOIN
+1. What is the relationship between standard join types and join types like EQUI-JOIN?
 
-##### CROSS JOIN VS. FULL OUTER JOIN 
 
-##### SEMI JOIN VS. OUTER JOIN
-
-##### pitfalls of NULL values
-
-##### CROSS APPLY VS. OUTER JOIN
-
+2. What is the difference between SEMI JOIN and OUTER JOIN?
 
 
 
