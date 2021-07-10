@@ -4,7 +4,7 @@ title:  "Basics You Need to Know about SQL Joins"
 date:   2021-06-23 15:03:00
 ---
 
-_Observing true experts in different fields, you find a common practice that they all share -- mastering the basics._
+_**Observing true experts in different fields, you find a common practice that they all share -- mastering the basics.**_
 
 -- _Itzik Ben-Gan, Inside SQL Server 2008: T-SQL Querying_
 
@@ -14,13 +14,11 @@ _Observing true experts in different fields, you find a common practice that the
 
 <!-- important -> difficult and complex -> goal and overview of the article -->
 
-As a critical component in SQL (Structured Query Language), the join operation is to combine two or more tables into a new table. 
-On one hand, understanding the different types of joins and how they are handled at system level is central to mastering data processing.
-On the other hand, joining tables can be a complex and confusing procedure for novice, due to the many kinds of join types and implementation options depending system conditions.
+As a critical component in SQL (Structured Query Language), the join operation combines two or more tables into a new table. On the one hand, understanding the different types of joins and how they are processed is central to mastering querying data. On the other hand, joining tables can be a complex and confusing procedure for novices due to the many kinds of join types and various system conditions.
 
-In this article, I will cover the join syntax, types, related concepts and pitfalls, go through the essential join implementation algorithms, and present the join order optimization problem and techniques, which are inevitable to a database system.
-The goal is to provide a comprehensive guide that helps the audience understand SQL join in a systematic and intuitive way. 
-I will use the below two example tables borrowed from Wikipedia[[1](https://en.wikipedia.org/wiki/Join_(SQL))] through the text.
+In this article, I will cover the join syntax, standard types, related concepts, then go through the essential join implementation algorithms and the join order optimization problem, which are inevitable to a database system. The goal is to provide a comprehensive guide that I wish I had, and hopefully, it also helps the audience understand SQL joins in a systematic and intuitive way.
+I will use the below example tables borrowed from Wikipedia[1] through the text.
+
 
 <img src="/images/join/join-1.jpg" class="left" width="100%" height="100%" />
 
@@ -29,72 +27,48 @@ I will use the below two example tables borrowed from Wikipedia[[1](https://en.w
 ## Two Styles of Join Syntax
 <!-- introduce sql syntax and standard join types-->
 
-The starting point of the join operations in database systems is the join clauses in SQL, 
-a domain language to query databases. 
-SQL became a standard of the American National Standards Institute (ANSI) in 1986, and the standard has evolved over the decades. 
-Although various database systems have their SQL dialect, they all support five types of joins: ```INNER```, ```LEFT OUTER```, ```RIGHT OUTER```, ```FULL OUTER``` and ```CROSS```, specified in the ANSI standard.
+The starting point of a join operation in database systems is the join clause within the SQL statement written by the user. SQL became a standard of the American National Standards Institute (ANSI) in 1986. Although various database systems have their SQL dialects, they all support five standard types of joins: ```INNER```, ```LEFT OUTER```, ```RIGHT OUTER```, ```FULL OUTER``` and ```CROSS```.
 
-In terms of the join statement, two specific ANSI standard syntax versions are important to include. 
-The table below shows the difference.
-The _ANSI 89_ syntax (old style / implicit join notation) uses a cross join or comma-delimited list of tables in FROM clause, and places the join conditions in the WHERE clause.
-Note that no implicit join-notation for outer joins exists in standard SQL.
-The ```OUTER JOIN``` example shown in the table is the syntax adopted in Sybase[[3]()].
-While the _ANSI 92_ (new style/ explicit join notation) syntax uses a set of explicit key words like ```INNER JOIN```, ```LEFT JOIN```, et cetera to specify the join type, and puts the join conditions in an ON clause, where ON clause is used to specify the joining conditions over attributes.
+As the ANSI standard has evolved over the decades, two specific versions of ANSI standards are necessary to illustrate here for the join clause part. The ANSI 92 (also known as “new style” or “explicit join notation”) syntax uses a set of explicit keywords like INNER JOIN, LEFT JOIN, et cetera to specify the join type, and puts the join conditions in an ON clause, which stipulates the joining conditions over the attributes. In comparison, the ANSI 89 syntax (also known as “old style” or “implicit join notation”) uses a cross join or comma-delimited list of tables in the FROM clause and places the join conditions in the WHERE clause. The table below shows the difference between the two styles. Note that there is no standard notation for outer joins in ANSI 89 standard. The ```OUTER JOIN``` example shown in the table is the syntax adopted in Sybase.
+
 
 <img src="/images/join/join-2.png" class="left" width="100%" height="100%" />
 
-A natural question to ask is: which style should you use? 
-Although in practice many people find the implicit join is intuitive widely used, the explicit notation is known as the best practice [[2](https://stackoverflow.com/questions/11251751/which-join-syntax-is-better)]. 
-The implicit way is not only harder to debug but also limitedly supported for OUTER JOINs.
-It will also help eliminate the unintended cross product (inner join operations missing the join condition). 
-
+A natural question to ask is: which style should we use? Although many people find the implicit join is intuitive and widely used in practice, the explicit notation is known as the best practice [2, 3]. The implicit way is not only harder to debug but also has limited support for outer joins. What is more, the explicit statement helps eliminate the unintended cross product (inner joins missing the join condition).
 
 --- 
 ## Standard SQL Join Types
 
 <!-- join operations definitions, results and applications-->
 
-We are ready to understand the results produced by different join types.
+We are ready to understand the results produced by the above-introduced join types.
 
-**1. INNER JOIN**
+#### 1. INNER JOIN
 
-```INNER JOIN``` is probably the most commonly used. 
-It matches two tables based on column values.
-The table below shows the result from the previous INNER JOIN query.
-We should pay special attention to NULL values when joining, because **NULL values will never match any other value (not even NULL itself)**.
-For INNER JOIN, when the table contains NULL values, it is recommanded to enforce the integrity first,
-or consider an OUTER JOIN.
+```INNER JOIN``` is probably the most commonly used one. It matches two tables based on the column values. 
 Executing 
 {% highlight ruby %}
 SELECT  Employee.LastName, Employee.DepartmentID, Department.DepartmentName
 FROM employee
 INNER JOIN department ON employee.DepartmentID = department.DepartmentID;
-{% endhighlight %}
-the result is shown below.
-
+{% endhighlight %}, the result is shown below.
 
 <img src="/images/join/join-3.svg" class="left" width="100%" height="100%" />
 
+We should pay special attention to NULL values when joining because **NULL values will never match any other value (not even NULL itself)**. For inner joins, when the table contains NULL values, it is recommended to enforce the integrity first (make sure there is no NULL value in the column) or consider changing to an outer join.
 
-**2. CROSS JOIN**
 
-```CROSS JOIN``` returns the Cartesian product of rows from tables in the join as shown below. 
-In other words, it will produce rows which combine each row from the first table with each row from the second table. 
-It worth noting that the results of the ```INNER JOIN``` is a subset of ```CROSS JOIN```, with selection condition applied.
-When the condition is always true (for example, ```SELECT * FROM employee INNER JOIN department ON 1=1;```), ```INNER JOIN``` and ```CROSS JOIN``` will produce the same results.
- 
+#### 2. CROSS JOIN
+
 <img src="/images/join/join-4.jpg" class="left" width="100%" height="100%" />
 
-
-**3. OUTER JOINs**
-
-The major difference between an ```OUTER JOIN``` and a ```INNER JOIN``` is that the result of the ```OUTER JOIN``` retains each row, even if no other matching row exists.
-An example use case would be to produce a report that shows ALL customers and their purchases[[2](https://stackoverflow.com/questions/1101343/what-is-the-purpose-or-use-case-for-an-outer-join-in-sql)].
-That is, show even customers who have not purchased anything. 
-If you do an ordinary join (```INNER JOIN```) of customers and purchases, the report would show only those customers with at least one purchase.
+```CROSS JOIN``` returns the cartesian product of rows from both tables, as shown in the table above. In other words, it produces rows that combine each row from the first table with each row from the second table. The results of the inner join is a subset of the cross join, with the selection condition applied. When the condition is always true, ```INNER JOIN``` and ```CROSS JOIN``` will produce the same results. For example, ```SELECT * FROM employee INNER JOIN department ON 1=1;``` is equivalent to the cross join.
 
 
-The result of a ```LEFT OUTER JOIN``` (or simply ```LEFT JOIN```) for tables A and B always contains all rows of the "left" table (employee table here), even if the join condition does not find any matching row in the "right" table (department table here).
+#### 3. OUTER JOINs
+
+The significant difference between an outer join and an inner join is that the result of the outer join retains each row, even if no other matching row exists. For the rows that can not be matched, a NULL value will be filled for every column of the table that lacks a matching row. 
+The result of a ```LEFT OUTER JOIN``` (or simply ```LEFT JOIN```) for tables A and B always contains all rows of the "left" table (the employee table here), even if the join condition does not find any matching row in the "right" table (the department table here).
 The result of executing
 {% highlight ruby %}
 SELECT *
@@ -106,8 +80,9 @@ is shown as the following.
 <img src="/images/join/join-5.jpg" class="left" width="100%" height="100%" />
 
 
-Similarly, the result of a **RIGHT OUTER JOIN** always contains all the all rows of the "right" table.
-The result of executing
+A typical use case of LEFT JOIN is to produce a report that shows ALL the records from the left table even if the record can not be matched with the right table at all, and the result table will contain NULL values. If you do an ordinary join (```INNER JOIN```), the result will show only those records having a matching. A more concrete example is in [3].
+
+Similarly, the result of a **RIGHT OUTER JOIN** always contains all the all rows of the "right" table. The result of executing
 {% highlight ruby %}
 SELECT *
 FROM employee
@@ -118,12 +93,8 @@ is shown as the following.
 
 <img src="/images/join/join-6.jpg" class="left" width="100%" height="100%" />
 
-
 A **FULL OUTER JOIN** combines the effect of applying both left and right outer joins. 
-It contains all the matched rows.
-For the rows that can not be matched, NULL value will be filled for every column of the table that lacks a matching row.
-The result of executing
-
+It contains all the rows from both the left table and the right table. The result of executing
 {% highlight ruby %}
 SELECT *
 FROM employee
@@ -137,165 +108,136 @@ FULL OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
 
 ## Other Join Concepts
 
-Except for the above standard join types, there are some related join terms that you will see in many scenarios.
-That is part of the reason that makes understanding joins confusing.
+Except for the above standard join types, there are several related join terms that you can find in various scenarios. They are a part of the reason that makes joins confusing.
 
-**```NATURAL JOIN```** is a join type similar to above standard operations included in _ANSI 92_, but not supported by all the databases. PostgreSQL, MySQL and Oracle support natural joins; Microsoft T-SQL and IBM DB2 do not.
-A ```NATURAL JOIN``` example is:
+
+#### 1. NATURAL JOIN
+
+```NATURAL JOIN``` is a join operator similar to the above standard operations and included in ANSI 92, but not supported by all the databases. PostgreSQL, MySQL, and Oracle support natural join, but Microsoft T-SQL and IBM DB2 do not. A natural join example is:
 {% highlight ruby %}
 SELECT *
 FROM employee NATURAL JOIN department;
 {% endhighlight %}
-
 It is equivalent with 
 {% highlight ruby %}
 SELECT *
 FROM employee INNER JOIN department USING (DepartmentID);
 {% endhighlight %}
-
-The results is shown below.
+The result is shown below:
 
 <img src="/images/join/join-3.svg" class="left" width="100%" height="100%" />
 
-The **USING clause** is used to explicitly specify the matching column.
-Any columns mentioned in the USING list will appear only once,
-NATURAL JOIN and USING Clause are mutually exclusive and supported together[[](https://troels.arvin.dk/db/rdbms/)].
+The natural join operator creates a join clause based on the common columns (defined as having the same name) in the two tables being joined, checks the definition of both tables (in the data catalog or metadata), and looks for like-named columns. A natural join can be an inner join or an outer join. For example, you can write ```SELECT *  FROM employee NATURAL LEFT JOIN department;```. The default is natural inner join.
 
-```NATURAL JOIN``` creates an implicit join clause based on the common columns (defined as having the same name) in the two tables being joined. 
-A NATURAL JOIN can be an INNER join, a LEFT OUTER join, or a RIGHT OUTER join, for example, you can write ```SELECT *
-FROM employee NATURAL LEFT JOIN department;```.
-The default is INNER join.
+Well, should you use NATURAL JOIN? 
+The primary concern of the natural join is that it assumes stability and consistency in column names. While the join conditions can include one or more columns, you have no choice in selecting the join columns.
+In practice, the column names can change during schema upgrades, and in many database environments, the column names are controlled by an outside vendor, not by the query developer. In other words, the core danger of using natural join is omitting the column validation step. The columns used in the join are implicit, and the join clause does not show which columns are expected. Therefore a change in column names may change the results.
+When the database is changed without notifying the query developer, the results might not be what the query developer expects. This blog [5] shows a concrete example.
 
-The NATURAL JOIN checks the definition of both tables (in the data catalog or metadata) and looks for like named columns. 
-It should not have a qualifier(table name or Alias) in the referenced columns.
-While the join conditions can include one or more columns, you have no choice in selecting the join columns.
-The major concern of the natural join is that it assumes stability and consistency in column names which can change during vendor mandated version upgrades, while in many database environments the column names are controlled by an outside vendor, not the query developer. The core danger it omitting the column validation step. 
-The columns used in the join are implicit so the join code does not show which columns are expected, and a change in column names may change the results.
-When the database is changed without notifying the query developer, the results might not be what the query developer is expecting for.
-This [blog](https://blog.mclaughlinsoftware.com/2008/05/24/unnatural-outcome-of-natural-joins/) shows a concerete example.
+The **USING clause** specifies the matching column explicitly as an alternative to the ON clause. Any columns mentioned in the USING list will appear only once in the result. Natural joins and USING clauses are mutually exclusive and supported together[7].
 
 
-**EQUI-JOIN**, **NON-EQUI JOIN** and **Theta JOIN** are a group of comparator-based join.
-They are just the name for the joins with or without the equal condition.
-EQUI-JOIN refers to the joins that uses only equality comparisons in the join-predicate, i.e. using other comparison operators (such as <) disqualifies a join as an equi-join. The examples we saw so far are all EQUI-JOINs.
-All the NATURAL JOINs are EQUI-JOINs.
-Similarly, NON-EQUI JOIN refers to the joins that use comparison operators like <, >, <=, >=, !=, and <> and the BETWEEN operator (but not =).
-For example, you can write ``` SELECT * FROM employee JOIN department ON employee.DepartmentID != department.DepartmentID;
-```.
-A theta join allows for arbitrary comparison relationships. 
-An equijoin is a theta join using the equality operator.
-Both NON-EQUI JOIN and EQUI-JOIN are theta joins.
-Natural join is a subset of Equi join, which is a subset of Theta join.
+#### 2. SEMI JOIN and ANTI [SEMI] JOIN
+
+Semi join, just like anti join and division, is one of a few operators in relational algebra that does not have representation in standard SQL language (U-SQL supports ```SEMIJOIN``` operator [9]).
+A semi join is the set of tuples in one table that match the join keys of the second. Unlike inner and outer joins, a semi join cannot multiply the rows in the table: a tuple is either included or not included. A semi left join expresses the following behavior.
+{% highlight ruby %}
+select t.*
+from t
+where t.key in (select u.key from u);
+{% endhighlight %}
+
+In comparison, an anti join does the exact opposite. It returns the set of tuples in one table that does not match the join keys of the second. The behavior of the left anti join can be expressed using the SQL below.
+{% highlight ruby %}
+select t.*
+from t
+where t.key not in (select u.key from u);
+{% endhighlight %}
 
 
-**SEMI JOIN** 
+#### 3. EQUI JOIN, NON-EQUI JOIN, and Theta JOIN
+
+This is a group of comparator-based joins, classified only based on the join condition. 
+Equi join refers to the joins that use only equality comparisons in the join predicate, i.e., using other comparison operators (such as <) disqualifies a join as an equi join. The examples we saw so far are all equi joins. And all the natural joins are equi joins.
+Non-equi join refers to the joins that use comparison operators like <, >, <=, >=, !=, and <> and the BETWEEN operator (but not =).
+For example, ``` SELECT * FROM employee JOIN department ON employee.DepartmentID != department.DepartmentID; ``` is a non-equi join.
+A theta join allows for arbitrary comparison relationships. Both non-equi join and equi join are theta joins. An equi join is a theta join using the equality operator. 
+
+#### 4. Others
+
+I would like to briefly mention a few other concepts closely related to join operations (although not joins) in this block for references.
+
+DIVISION is available in the definition of relational algebra but not immediately available in SQL. Intuitively, given two tables R and S, R / S returns part of the rows in R associated with every tuple in S. Each row only consists of the attribute names unique to R. Below shows a few examples from [10].
 
 
-
-**ANTI [SEMI] JOIN**
-An Antijoin implements an outer join minus an equijoin, which returns a relative complement when the first query is a LEFT JOIN or RIGHT JOIN and a symmetric difference when the first query is a FULL JOIN.
+<img src="/images/join/join-division.jpg" class="left" width="100%" height="100%" />
 
 
-**SELF JOIN**
+```CROSS APPLY``` operator is available in T-SQL. It is similar to ```INNER JOIN```, but join operators can not be used to join a table with the output of a table-valued function. This is where cross apply becomes useful. You can find concrete examples here[11].
 
-
-**UNION JOIN**
-
-
-In comparion to join operators, **DIVISION** is available in the definition of relational algebra.
-
-
-**CROSS APPLY**
-
-
-
----
-
-## Join Algorithms
-
-##### Nested Loop Join
-
-##### Hash Join
-
-##### Sort-Merge Join
-
-
----
-
-## Join Index Creation
-
-
-
----
-
-## Joins Order Optimization
-
-when joining multiple tables, due to the fact that joining can only be performed on two tables at once, different join orders lead to different execution time. Therefore join reordering is a critical component in query optimization.
-
-##### Left Deep
-
-##### Bushy
-
-##### Sample
-
-##### Learning-based
+```UNION``` is used to combine two tables as well, but it combines the result-set of two or more SELECT statements vertically instead of producing the cartesian product. 
+For example, the following SQL statement returns German cities (only distinct values) from both the "Customers" and the "Suppliers" table.
+{% highlight ruby %}
+SELECT City, Country FROM Customers
+WHERE Country='Germany'
+UNION
+SELECT City, Country FROM Suppliers
+WHERE Country='Germany'
+ORDER BY City;
+{% endhighlight %}
+The following SQL statement (changing ```UNION``` to ```UNION ALL```) returns the German cities (duplicate values also) from both the "Customers" and the "Suppliers" table:
+{% highlight ruby %}
+SELECT City, Country FROM Customers
+WHERE Country='Germany'
+UNION ALL
+SELECT City, Country FROM Suppliers
+WHERE Country='Germany'
+ORDER BY City;
+{% endhighlight %}
 
 
 ---
 
-## Advanced Topics and Resources
+## Join Execution in DBMS
 
-1. Joins for Online Aggregation
-	http://www.cs.cmu.edu/~natassa/courses/15-823/F02/papers/decision-ripple-sigmod99.pdf
-	http://www.cs.utah.edu/~zyzhao/files/papers/wanderjoin.pdf
-2. Join Order Selection using Reinforcement Learning
-3. Join-size Estimation 
-Y. E. Ioannidis, S. Christodoulakis. On the Propagation of Errors in the Size of Join Results.  SIGMOD 1991. (Must-read)
-Swarup Acharya, Phillip B. Gibbons, Viswanath Poosala, Sridhar Ramaswamy: Join Synopses for Approximate Query Answering. SIGMOD 99.
-Noga Alon, Phillip B. Gibbons, Yossi Matias, and Mario Szegedy: Tracking join and self-join sizes in limited storage. PODS 1999.
-Wei Sun, Yibei Ling, Naphtali Rishe and Yi Deng: An instant and accurate size estimation method for joins and selection in a retrieval-intensive environment. Sigmod 1993.
-Allen Van Gelder: Multiple join size estimation by virtual domains. PODS 1993.
-Arun Swami and K. Bernhard Schiefer: On the estimation of join result sizes.
-Stavros Christodoulakis: Estimating block transfers and join sizes. 1983.
-4. Memory Adaptive Sorting and Hashing
-Masaya Nakayama, Masaru Kitsuregawa, and Mikio Takagi. Hash-partitioned join method using dynamic destaging strategy. VLDB 88'.
-Hansj¨ org Zeller and Jim Gray. An adaptive hash join algorithm for multiuser environments. VLDB 90'. 
-HweeHwa Pang, Michael J. Carey, and Miron Livny. Partially preemptive hash joins. SIGMOD 93'.
-5. approximate string joins
+So far, we have talked about the types of joins in SQL. When the query is sent to the system, there are two topics closely relevant to understand how the join statement is executed, although they are not a pre-requisite to write SQL queries.
+
+One is the join algorithms[12] that produce the results from two tables. There are three mainstream algorithms. Nested loop join goes over two tables with two loops and searches for the record pairs that satisfy the condition. Sort merge join works on two groups of pre-sorted keys and probe to merge.
+Hash join is fast for equi joins. It builds a hash table for a table and then probes the other table so that only tuples with the same hash code need to be compared for equality in equijoins.
+I highly recommend you to refer to this document[13] for further exploration.
+
+The other topic is the join order optimization[14]. 
+When joining multiple tables, since joining can only be performed on two tables at a time, different join orders lead to different execution times. Therefore join reordering is a critical component in query optimization. A cost estimation function estimates the cost of joining two tables, and the cost determines which order is better. An exhaustive search algorithm is widely used to return the optimized join order. Other possible methods include left-deep and sampling.
+Recently, reinforcement learning-based approaches are used to determine the join order (only in the research literature).
+
+In this post, I gave a tour of the SQL join syntax, concepts, types, and operators, introduced their usage and results. Some of them are a part of the ANSI standard, while some are non-standard and supported by a few systems or only exist in relational algebra theory. Knowing them can be helpful to understand and write good SQL queries. Lastly, I introduced two problems highly relevant to join handling in database systems.
 
 
+---
 
-Thanks Meng Xu for reading the draft and providing feedback.
-If you have comments or questions, file an issue or PR [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
+## References:
 
-
-
-References:
-[1]. https://en.wikipedia.org/wiki/SQL
-[1]. https://blog.mclaughlinsoftware.com/oracle-sql-programming/basic-sql-join-semantics/
-[2]. https://stackoverflow.com/questions/1599050/will-ansi-join-vs-non-ansi-join-queries-perform-differently
-[3]. Syntax comparison examples https://stackoverflow.com/questions/18891148/oracle-joins-comparison-between-conventional-syntax-vs-ansi-syntax
-[4]. Equi-join VS. Inner-join https://stackoverflow.com/questions/5471063/is-inner-join-the-same-as-equi-join
-[5]. SQL implementations http://troels.arvin.dk/db/rdbms/
-[6]. ANSI JOIN standard https://www.oratechinfo.co.uk/ansi_joins.html
-[7]. Natural join example https://blog.mclaughlinsoftware.com/2008/05/24/unnatural-outcome-of-natural-joins/
+[1]. [Wiki Join(SQL)](https://en.wikipedia.org/wiki/Join_(SQL)) 
+[2]. [Stackoverflow: Which join syntax is better?](https://stackoverflow.com/questions/11251751/which-join-syntax-is-better) 
+[3]. [Stackoverflow: Comparison between conventional syntax VS ANSI Syntax](https://stackoverflow.com/questions/18891148/oracle-joins-comparison-between-conventional-syntax-vs-ansi-syntax)
+[4]. [Stackoverflow: What is the purpose (or use case) for an outer join in SQL?](https://stackoverflow.com/questions/1101343/what-is-the-purpose-or-use-case-for-an-outer-join-in-sql) 
+[5]. [Wiki Relational Algebra](https://en.wikipedia.org/wiki/Relational_algebra)
+[6]. [Unnatural outcome of natural joins](https://blog.mclaughlinsoftware.com/2008/05/24/unnatural-outcome-of-natural-joins/)
+[7]. [Comparison of different SQL implementations](http://troels.arvin.dk/db/rdbms/)
+[8]. [ANSI JOIN Syntax](https://www.oratechinfo.co.uk/ansi_joins.html)
+[9]. [U-SQL SEMIJOIN](https://docs.microsoft.com/en-us/u-sql/statements-and-expressions/select/from/joins/semijoin)
+[10]. [Division in Relational Algebra](https://www.cs.ubc.ca/~laks/cpsc304/Unit05-FormalLanguages.pdf)
+[11]. [Stackoverflow: When should I use CROSS APPLY over INNER JOIN?](https://stackoverflow.com/questions/1139160/when-should-i-use-cross-apply-over-inner-join)
+[12]. [Wiki Join Algorithms](https://en.wikipedia.org/wiki/Category:Join_algorithms)
+[13]. [Join Algorithms by Andy Pavlo](https://15445.courses.cs.cmu.edu/fall2020/notes/11-joins.pdf)
+[14]. [Cockroach Labs blog: An Introduction to Join Ordering](https://www.cockroachlabs.com/blog/join-ordering-pt1)
 
 
 
 
+Thanks to Meng Xu for reading the draft and providing feedback.
 
-
-
-
-
-
-
-
-
-
-
-
-
+If you have comments or questions, file an issue [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
 
 
 
