@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Basics You Need to Know about SQL Joins"
-date:   2021-06-23 15:03:00
+date:   2021-07-10 15:31:00
 ---
 
 _**Observing true experts in different fields, you find a common practice that they all share -- mastering the basics.**_
@@ -23,7 +23,7 @@ I will use the below example tables borrowed from Wikipedia[1] through the text.
 <img src="/images/join/join-1.jpg" class="left" width="100%" height="100%" />
 
 
----
+
 ## Two Styles of Join Syntax
 <!-- introduce sql syntax and standard join types-->
 
@@ -36,7 +36,7 @@ As the ANSI standard has evolved over the decades, two specific versions of ANSI
 
 A natural question to ask is: which style should we use? Although many people find the implicit join is intuitive and widely used in practice, the explicit notation is known as the best practice [2, 3]. The implicit way is not only harder to debug but also has limited support for outer joins. What is more, the explicit statement helps eliminate the unintended cross product (inner joins missing the join condition).
 
---- 
+
 ## Standard SQL Join Types
 
 <!-- join operations definitions, results and applications-->
@@ -90,7 +90,6 @@ RIGHT OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
 {% endhighlight %}
 is shown as the following.
 
-
 <img src="/images/join/join-6.jpg" class="left" width="100%" height="100%" />
 
 A **FULL OUTER JOIN** combines the effect of applying both left and right outer joins. 
@@ -103,8 +102,6 @@ FULL OUTER JOIN department ON employee.DepartmentID = department.DepartmentID;
 
 <img src="/images/join/join-7.jpg" class="left" width="100%" height="100%" />
 
-
----
 
 ## Other Join Concepts
 
@@ -169,8 +166,7 @@ I would like to briefly mention a few other concepts closely related to join ope
 
 DIVISION is available in the definition of relational algebra but not immediately available in SQL. Intuitively, given two tables R and S, R / S returns part of the rows in R associated with every tuple in S. Each row only consists of the attribute names unique to R. Below shows a few examples from [10].
 
-
-<img src="/images/join/join-division.jpg" class="left" width="100%" height="100%" />
+<img src="/images/join/join-division.jpg" class="left" width="100%" height="80%" /> 
 
 
 ```CROSS APPLY``` operator is available in T-SQL. It is similar to ```INNER JOIN```, but join operators can not be used to join a table with the output of a table-valued function. This is where cross apply becomes useful. You can find concrete examples here[11].
@@ -196,7 +192,6 @@ ORDER BY City;
 {% endhighlight %}
 
 
----
 
 ## Join Execution in DBMS
 
@@ -217,27 +212,25 @@ In this post, I gave a tour of the SQL join syntax, concepts, types, and operato
 
 ## References:
 
-[1]. [Wiki Join(SQL)](https://en.wikipedia.org/wiki/Join_(SQL)) 
-[2]. [Stackoverflow: Which join syntax is better?](https://stackoverflow.com/questions/11251751/which-join-syntax-is-better) 
-[3]. [Stackoverflow: Comparison between conventional syntax VS ANSI Syntax](https://stackoverflow.com/questions/18891148/oracle-joins-comparison-between-conventional-syntax-vs-ansi-syntax)
-[4]. [Stackoverflow: What is the purpose (or use case) for an outer join in SQL?](https://stackoverflow.com/questions/1101343/what-is-the-purpose-or-use-case-for-an-outer-join-in-sql) 
-[5]. [Wiki Relational Algebra](https://en.wikipedia.org/wiki/Relational_algebra)
-[6]. [Unnatural outcome of natural joins](https://blog.mclaughlinsoftware.com/2008/05/24/unnatural-outcome-of-natural-joins/)
-[7]. [Comparison of different SQL implementations](http://troels.arvin.dk/db/rdbms/)
-[8]. [ANSI JOIN Syntax](https://www.oratechinfo.co.uk/ansi_joins.html)
-[9]. [U-SQL SEMIJOIN](https://docs.microsoft.com/en-us/u-sql/statements-and-expressions/select/from/joins/semijoin)
-[10]. [Division in Relational Algebra](https://www.cs.ubc.ca/~laks/cpsc304/Unit05-FormalLanguages.pdf)
-[11]. [Stackoverflow: When should I use CROSS APPLY over INNER JOIN?](https://stackoverflow.com/questions/1139160/when-should-i-use-cross-apply-over-inner-join)
-[12]. [Wiki Join Algorithms](https://en.wikipedia.org/wiki/Category:Join_algorithms)
-[13]. [Join Algorithms by Andy Pavlo](https://15445.courses.cs.cmu.edu/fall2020/notes/11-joins.pdf)
+[1]. [Wiki Join(SQL)](https://en.wikipedia.org/wiki/Join_(SQL)) \\
+[2]. [Stackoverflow: Which join syntax is better?](https://stackoverflow.com/questions/11251751/which-join-syntax-is-better) \\
+[3]. [Stackoverflow: Comparison between conventional syntax VS ANSI Syntax](https://stackoverflow.com/questions/18891148/oracle-joins-comparison-between-conventional-syntax-vs-ansi-syntax) \\
+[4]. [Stackoverflow: What is the purpose (or use case) for an outer join in SQL?](https://stackoverflow.com/questions/1101343/what-is-the-purpose-or-use-case-for-an-outer-join-in-sql) \\
+[5]. [Wiki Relational Algebra](https://en.wikipedia.org/wiki/Relational_algebra) \\
+[6]. [Unnatural outcome of natural joins](https://blog.mclaughlinsoftware.com/2008/05/24/unnatural-outcome-of-natural-joins/) \\
+[7]. [Comparison of different SQL implementations](http://troels.arvin.dk/db/rdbms/) \\
+[8]. [ANSI JOIN Syntax](https://www.oratechinfo.co.uk/ansi_joins.html) \\
+[9]. [U-SQL SEMIJOIN](https://docs.microsoft.com/en-us/u-sql/statements-and-expressions/select/from/joins/semijoin) \\
+[10]. [Division in Relational Algebra](https://www.cs.ubc.ca/~laks/cpsc304/Unit05-FormalLanguages.pdf) \\
+[11]. [Stackoverflow: When should I use CROSS APPLY over INNER JOIN?](https://stackoverflow.com/questions/1139160/when-should-i-use-cross-apply-over-inner-join) \\
+[12]. [Wiki Join Algorithms](https://en.wikipedia.org/wiki/Category:Join_algorithms) \\
+[13]. [Join Algorithms by Andy Pavlo](https://15445.courses.cs.cmu.edu/fall2020/notes/11-joins.pdf) \\
 [14]. [Cockroach Labs blog: An Introduction to Join Ordering](https://www.cockroachlabs.com/blog/join-ordering-pt1)
-
-
 
 
 Thanks to Meng Xu for reading the draft and providing feedback.
 
-If you have comments or questions, file an issue [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
+If you have comments or questions, you are welcome to file an issue [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
 
 
 
