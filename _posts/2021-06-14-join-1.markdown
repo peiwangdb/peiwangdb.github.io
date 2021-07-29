@@ -45,7 +45,7 @@ We are ready to understand the results produced by the above-introduced join typ
 
 #### 1. INNER JOIN
 
-```INNER JOIN``` is probably the most commonly used one. It matches two tables based on the column values. 
+```INNER JOIN``` is probably the most commonly used one. It matches two tables based on the column values, and only includes rows where the match condition satisfies. 
 Executing 
 {% highlight ruby %}
 SELECT  Employee.LastName, Employee.DepartmentID, Department.DepartmentName
@@ -60,9 +60,17 @@ We should pay special attention to NULL values when joining because **NULL value
 
 #### 2. CROSS JOIN
 
+```CROSS JOIN``` returns the cartesian product of rows from both tables.
+Executing
+{% highlight ruby %}
+SELECT  Employee.LastName, Employee.DepartmentID, Department.DepartmentName
+FROM employee
+CROSS JOIN department ON employee.DepartmentID = department.DepartmentID;
+{% endhighlight %}, we get the result below.
+
 <img src="/images/join/join-4.jpg" class="left" width="100%" height="100%" />
 
-```CROSS JOIN``` returns the cartesian product of rows from both tables, as shown in the table above. In other words, it produces rows that combine each row from the first table with each row from the second table. The results of the inner join is a subset of the cross join, with the selection condition applied. When the condition is always true, ```INNER JOIN``` and ```CROSS JOIN``` will produce the same results. For example, ```SELECT * FROM employee INNER JOIN department ON 1=1;``` is equivalent to the cross join.
+In other words, it produces rows that combine each row from the first table with each row from the second table. The results of the inner join is a subset of the cross join, with the selection condition applied. When the condition is always true, ```INNER JOIN``` and ```CROSS JOIN``` will produce the same results. For example, ```SELECT * FROM employee INNER JOIN department ON 1=1;``` is equivalent to the cross join.
 
 
 #### 3. OUTER JOINs
@@ -137,7 +145,7 @@ The **USING clause** specifies the matching column explicitly as an alternative 
 #### 2. SEMI JOIN and ANTI [SEMI] JOIN
 
 Semi join, just like anti join and division, is one of a few operators in relational algebra that does not have representation in standard SQL language (U-SQL supports ```SEMIJOIN``` operator [9]).
-A semi join is the set of tuples in one table that match the join keys of the second. Unlike inner and outer joins, a semi join cannot multiply the rows in the table: a tuple is either included or not included. A semi left join expresses the following behavior.
+A semi join is the set of tuples in one table that match the join keys of the second. Unlike inner and outer joins, a semi join only returns the rows from one table instead of a joined-row with columns from both tables, i.e. a tuple is either included or not included. A semi left join expresses the following behavior.
 {% highlight ruby %}
 select t.*
 from t
