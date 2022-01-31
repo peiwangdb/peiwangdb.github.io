@@ -1,0 +1,16 @@
+---
+layout: post
+title:  "Consciousness On Public Online IDs"
+date:   2022-01-31 17:18:00
+---
+
+
+We hold IDs such as passports and driver’s licenses in the physical world and show them to specific people in specific scenarios. In the cyber world, IDs are usually strings that appear together with other users’ information. This article discusses the IDs for general public websites such as Reddit, Twitter, and Yelp, visible to everyone who visits the webpages. Online IDs in general have much lower integrity and uniqueness requirements than real-world IDs. For example, one cannot have two passports under different names but can hold two accounts for a website. Also, all the IDs belonging to the same person must show the same name. While in the cyber world, users can register usernames purely based on their preferences.
+
+With the flexibility and control we have for the online IDs, I was long-time puzzled: how should I decide what ID I should use (more recognizable or less recognizable names) for a website or which ID (if I have many) I should choose when I speak? Is it a good idea to use the same username all the time across many websites? Or should I try my best to be anonymous and hide my identity?
+
+I believe the majority of the people hold only one account for one website, mainly for convenience. Managing many accounts and making them secure is a demanding task for a human brain. It is not necessary for most users either. To further ease the efforts, some people even use similar passwords across the websites, while it potentially causes serious personal data leaking. The other benefit of publishing under one ID is maximizing the influence. As a creation behavior, the more and the better you publish, the more you gain. The biggest gainers are the KOLs and celebrities who established and maximized their influence through online social networks.
+
+These IDs also run the risk of being judged, criticized, and attacked explicitly or implicitly for their perspectives. The other concern is that the internet today is a de facto blockchain. The footprints will be public and easily retrieved by anyone in the future. To protect the privacy and prevent potential risks, we could try our best to be completely anonymous, use as many as possible online identities and associated emails, or even adopt more sophisticated techniques. But it requires advanced technical management skills and there will be no credibility and influence established either.
+
+Complete anonymity might be too much. One step back is to hold multiple IDs for different purposes and make them detached from the identity in the real world (a kind of pseudonymity, just like we play many roles in real life). The prevalence of this type of usage is increasing, like Satoshi Nakamoto, an ID only for publishing bitcoin-related ideas and discussions. In the past, the most trusted IDs are attached to a real person who had enough success in the real world. Nowadays, more and more KOLs are behind virtual IDs, trusted purely because of their online activities and productions, regardless of who they are offline. What is behind an ID is a personal brand and the accountability associated. To publish is to build this brand and the credit history. The transition of web2 to web3 will open more opportunities for online builders.
