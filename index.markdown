@@ -11,7 +11,7 @@ I like artisan bread, thai green curry and cauliflower.
 
 This is a place where I plan to keep some of my learnings and thoughts.
 The [picture](https://www.roningallery.com/zojo-temple-in-snow-at-shiba) apparently is not me or by me.
-Here, it is like a picture that you use to decorate the living room.
+Posted here, it is like a picture that you use to decorate the living room.
 I like it and I found it fit this website well. 
 
 If you have comments or suggestions regarding the content, welcome to raise an issue or pull request [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
