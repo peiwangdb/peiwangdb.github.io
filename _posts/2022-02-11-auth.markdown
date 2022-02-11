@@ -1,0 +1,16 @@
+---
+layout: post
+title:  "Understanding the Difference between Web2 and Web3 by Authentication"
+date:   2022-02-11 15:25:00
+---
+
+
+Authentication is the process or action of proving or showing something to be true, genuine, or valid. In web2, the process is interpreted as the system checking whether a pair of user-provided name and password at log-in time matches a record in a centralized user account database and admitting the user to an active session in the case of success. Facing new applications, users must register first. The safety and ownership of users’ data and credentials are essentially owned and controlled by the backend system owners. 
+
+In Web3, everything starts with a browser extension called a wallet that holds the users’ on-chain account information. With this wallet, users can access many dApps (decentralized applications) such as uniswap, including the ones they never used before. The ownership of the account, the data needed for authorizing on-chain activities, and the assets are all inside the wallet, which is fully controlled by the users. The users are responsible for its safety too.
+
+The above operational difference leads to two entirely different cyber worlds. In the world of web2, the applications are disconnected and the user data are exclusive to the system. Users’ creditability and impact are restricted to isolated systems as well. For example, one’s Amazon account can only be used for purchasing from Amazon. The users’ purchase history and review only reflects the users’ status in the Amazon system. For tech companies, users’ account information is the most invaluable data and should be protected carefully. A small number of people behind controls how those data can be used. They are equipped with big power but not necessarily who we should and can trust. For example, Facebook’s business is accused of being built upon selling users’ data. 
+
+In Web3, the average number of accounts that a user holds is smaller, because there are only tens of mainstream public blockchains such as Ethereum, Solana, and Fantom. Hundreds of applications reside in each chain. The result is the usage of a web3 account is way wider due to its level-up accessibility power. Users have access to hundreds of dApps, and can use the same account for both gaming and currency exchange. This largely saves the trouble of keep forgetting this and that password. Another critical shift is the transparency of the on-chain activity data. The blockchain data and on-chain activities are public and traceable by unique wallet addresses. Everything is public and nothing is going on in the background without the users’ permissions. On the other hand, anyone can see and make use of the data for good or for bad. The on-chain data can be analogized as a credit profile and or a LinkedIn profile. One example is airdrop, meaning someone sends free tokens based on one’s historical activities. 
+
+In summary, authentication is a fundamental component of any application. The web2 and web3 authentication approaches are fundamentally in many aspects including new account registration, log-in, and activity authorization. And web3’s way opens up a world full of possibilities to be explored.
