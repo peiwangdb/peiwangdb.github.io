@@ -3,7 +3,7 @@ layout: default
 title: Pei Wang
 ---
 
-<img src="/images/hasui-2.jpeg" class="right" width="40%" height="40%" />
+<img src="/images/cover-img.jpeg" class="right" width="40%" height="40%" />
 
 Welcome! I'm Pei.
 
