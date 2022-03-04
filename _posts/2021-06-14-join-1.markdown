@@ -236,8 +236,6 @@ In this post, I gave a tour of the SQL join syntax, concepts, types, and operato
 [14]. [Cockroach Labs blog: An Introduction to Join Ordering](https://www.cockroachlabs.com/blog/join-ordering-pt1)
 
 
-Thanks to Meng Xu for reading the draft and providing feedback.
-
 If you have comments or questions, you are welcome to file an issue [here](https://github.com/peiwangdb/peiwangdb.github.io/issues).
 
 
